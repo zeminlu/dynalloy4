@@ -58,7 +58,7 @@ public final class DynAlloyAnalyzer {
 			controller.compile(dalsFile.getAbsolutePath(),
 					dalsFileToAlsPath(dalsFile),
 					DynAlloyOptions.DEFAULT_DYNALLOY_OPTIONS, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 		} catch (RecognitionException e) {
 			throw new DynalloyVisualizerException(e);
 		} catch (TokenStreamException e) {
@@ -99,7 +99,7 @@ public final class DynAlloyAnalyzer {
 			
 			compiler.compile(dalsFile.getAbsolutePath(),
 					output_filename, options, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 
 		} catch (RecognitionException e) {
 			throw new DynalloyVisualizerException(e);

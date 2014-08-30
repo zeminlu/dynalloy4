@@ -49,6 +49,7 @@ import ar.uba.dc.rfm.alloy.ast.formulas.AlloyFormula;
 import ar.uba.dc.rfm.alloy.ast.formulas.AndFormula;
 import ar.uba.dc.rfm.alloy.ast.formulas.FormulaVisitor;
 import ar.uba.dc.rfm.alloy.ast.formulas.ImpliesFormula;
+import ar.uba.dc.rfm.alloy.ast.formulas.NotFormula;
 import ar.uba.dc.rfm.alloy.ast.formulas.PredicateFormula;
 import ar.uba.dc.rfm.alloy.util.AlloyBuffer;
 import ar.uba.dc.rfm.alloy.util.AlloyPrinter;
@@ -81,6 +82,8 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 	private final SpecContext context;
 
 	private final DynAlloyOptions options;
+	
+	private boolean translatingForStryker = false;
 
 	private HashMap<String, AlloyTyping> varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram;
 
@@ -93,7 +96,8 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 
 	public DynalloyXlatorVisitor(SpecContext _specContext, DynAlloyOptions options, 
 			HashMap<String, AlloyTyping> vars, HashMap<String, List<AlloyFormula>> preds,
-			HashMap<String, AlloyTyping> varsOI, HashMap<String, List<AlloyFormula>> predsOI) {
+			HashMap<String, AlloyTyping> varsOI, HashMap<String, List<AlloyFormula>> predsOI,
+			boolean forStryker) {
 		super(new ProgramTranslator(_specContext));
 		programTranslator = (ProgramTranslator) this.getDfsProgramVisitor();
 		context = _specContext;
@@ -102,6 +106,7 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 		this.predsComingFromArithmeticConstraintsInContractsByProgram = preds;
 		this.varsAndTheirTypesComingFromArithmeticConstraintsInObjectInvariantsByModule = varsOI;
 		this.predsComingFromArithmeticConstraintsInObjectInvariantsByModule = predsOI;
+		this.translatingForStryker = forStryker;			
 	}
 
 	public AlloyModule visit(DynalloyModule n) {
@@ -317,7 +322,10 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 			}
 		}
 
-		AlloyFormula post = addIdxsToPost(n.getPost(), varCollector.collect(aux_af));		
+		
+		AlloyFormula post = addIdxsToPost(n.getPost(), varCollector.collect(aux_af));
+		if (translatingForStryker)
+			post = new NotFormula(post);
 
 		AlloyFormula formula = new ImpliesFormula(aux_af, post);		
 

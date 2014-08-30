@@ -35,10 +35,17 @@ public class DynAlloyTranslator {
 
 	private SpecContext specContext;
 
+	private boolean translatingForStryker = false;
+	
+	public DynAlloyTranslator(boolean forStryker){
+		this.translatingForStryker = forStryker;
+	}
+	
 	public SpecContext getSpecContext() {
 		return specContext;
 	}
 
+	
 	public void setSpecContext(SpecContext specContext) {
 		this.specContext = specContext;
 	}
@@ -60,7 +67,7 @@ public class DynAlloyTranslator {
 				varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram, 
 				predsComingFromArithmeticConstraintsInContractsByProgram,
 				varsAndTheirTypesComingFromArithmeticConstraintsInObjectInvariantsByModule,
-				predsComingFromArithmeticConstraintsInObjectInvariantsByModule);
+				predsComingFromArithmeticConstraintsInObjectInvariantsByModule, translatingForStryker);
 		AlloyModule alloyAST = (AlloyModule) dynalloyAST.accept(visitor);
 		return alloyAST;
 	}

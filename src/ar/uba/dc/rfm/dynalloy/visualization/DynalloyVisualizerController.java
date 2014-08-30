@@ -49,7 +49,7 @@ public final class DynalloyVisualizerController {
 		try {
 			compiler.compile(dalsFile.getAbsolutePath(),
 					dalsFileToAlsPath(dalsFile), opts, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 		} catch (RecognitionException e) {
 			throw new DynalloyVisualizerException(e);
 		} catch (TokenStreamException e) {

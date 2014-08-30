@@ -30,7 +30,7 @@ public class While_GrammarTest {
 
 		c.compile("test/regr/new_grammar/while_grammar.dals", "test/regr/new_grammar/while_grammar.als", options, 
 				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 
 	}
 

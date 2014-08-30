@@ -44,6 +44,8 @@ public final class AssertionDeclaration {
 	private final PredicateFormula pre;
 
 	private final String assertionId;
+	
+	private boolean translatingForStryker = false;
 
 	public AssertionDeclaration(String _assertionId, AlloyTyping _assertionPs,
 			PredicateFormula _pre, DynalloyProgram _program,
