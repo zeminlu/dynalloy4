@@ -37,7 +37,7 @@ public class OldExprGammarTest {
 		
 		c.compile("test/regr/new_grammar/old_expr_grammar.dals",
 				"test/regr/new_grammar/old_expr_grammar.als", options, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 
 	}
 
@@ -86,7 +86,7 @@ public class OldExprGammarTest {
 
 		c.compile("test/regr/new_grammar/old_expr_in_assume.dals",
 				"test/regr/new_grammar/old_expr_in_assume.als", options, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 
 	}
 

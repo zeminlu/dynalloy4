@@ -31,7 +31,7 @@ public class New_GrammarTest {
 
 		c.compile("test/regr/new_grammar/grammar_ext.dals",
 				"test/regr/new_grammar/grammar_ext.als", options, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 
 	}
 
@@ -50,7 +50,7 @@ public class New_GrammarTest {
 		
 		c.compile("test/regr/new_grammar/new_grammar.dals",
 				"test/regr/new_grammar/new_grammar.als", options, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 
 	}
 
@@ -69,7 +69,7 @@ public class New_GrammarTest {
 				
 		c.compile("test/regr/new_grammar/old_grammar.dals",
 				"test/regr/new_grammar/old_grammar.als", options, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 
 	}
 

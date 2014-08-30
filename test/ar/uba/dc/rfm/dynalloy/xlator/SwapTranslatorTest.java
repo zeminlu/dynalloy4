@@ -72,7 +72,7 @@ public class SwapTranslatorTest {
 
 	@Test
 	public void translateSwapAssertion() throws RecognitionException, TokenStreamException, IOException, AssertionNotFound {
-		DynAlloyTranslator subject = new DynAlloyTranslator();
+		DynAlloyTranslator subject = new DynAlloyTranslator(false);
 		
 		DynalloyParser parser = new DynalloyParser();
 		DynalloyModule dynalloyAST = parser.parse(swapSpecDynalloyAST);

@@ -53,6 +53,8 @@ public class DynAlloyCompiler {
 	private List<AlloyStringPlugin> alloy_string_plugins = new LinkedList<AlloyStringPlugin>();
 
 	private List<DynAlloyASTPlugin>  dynalloy_ast_plugins = new LinkedList<DynAlloyASTPlugin>();
+	
+	private boolean translatingForStryker = false;
 
 	private SpecContext specContext;
 
@@ -90,7 +92,8 @@ public class DynAlloyCompiler {
 			HashMap<String, AlloyTyping> varsAndTheirTypesComingFromArithmeticConstraintsInObjectInvariantsByModule,
 			HashMap<String, List<AlloyFormula>> predsComingFromArithmeticConstraintsInObjectInvariantsByModule,
 			HashMap<String, AlloyTyping> varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram,
-			HashMap<String, List<AlloyFormula>> predsComingFromArithmeticConstraintsInContractsByProgram) throws RecognitionException, TokenStreamException, IOException,
+			HashMap<String, List<AlloyFormula>> predsComingFromArithmeticConstraintsInContractsByProgram,
+			boolean translatingForStryker) throws RecognitionException, TokenStreamException, IOException,
 			AssertionNotFound {
 
 		// Read DynAlloy file
@@ -107,7 +110,7 @@ public class DynAlloyCompiler {
 		}
 
 		// Translate AST
-		DynAlloyTranslator dynalloyToAlloyXlator = new DynAlloyTranslator();
+		DynAlloyTranslator dynalloyToAlloyXlator = new DynAlloyTranslator(translatingForStryker);
 		AlloyModule alloyAST = dynalloyToAlloyXlator.translateDynAlloyAST(dynalloyAST, options, 
 				varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram, 
 				predsComingFromArithmeticConstraintsInContractsByProgram,

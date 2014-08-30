@@ -166,7 +166,7 @@ public class DynalloyToAlloyTranslatorTest {
 		SpecContext specContext = new SpecContext(dynalloyAST);
 		specContext.setFields(new AlloyTyping());
 		DynalloyXlatorVisitor translator = new DynalloyXlatorVisitor(specContext, DynAlloyOptions.DEFAULT_DYNALLOY_OPTIONS, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 		AlloyModule actual = (AlloyModule) dynalloyAST.accept(translator);
 
 		// check result
@@ -207,7 +207,7 @@ public class DynalloyToAlloyTranslatorTest {
 		SpecContext specContext = new SpecContext(dynalloyAST);
 		specContext.setFields(new AlloyTyping());
 		DynalloyXlatorVisitor translator = new DynalloyXlatorVisitor(specContext, DynAlloyOptions.DEFAULT_DYNALLOY_OPTIONS, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
 		AlloyModule actual = (AlloyModule) dynalloyAST.accept(translator);
 
 

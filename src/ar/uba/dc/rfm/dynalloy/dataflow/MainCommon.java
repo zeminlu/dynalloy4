@@ -37,7 +37,7 @@ public class MainCommon {
 	
 	public static SpecContext translateModule(String dynalloyFilePath) throws RecognitionException, TokenStreamException, IOException, AssertionNotFound {
 		DynalloyModule module = getModules(dynalloyFilePath);
-		DynAlloyTranslator translator = new DynAlloyTranslator();
+		DynAlloyTranslator translator = new DynAlloyTranslator(false);
 		
 		DynAlloyOptions options = new DynAlloyOptions();
 		options.setAssertionToCheck(getAssertionToCheck(dynalloyFilePath));
