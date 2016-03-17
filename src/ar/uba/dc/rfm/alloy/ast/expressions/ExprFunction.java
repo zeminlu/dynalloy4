@@ -8,6 +8,7 @@ public final class ExprFunction extends AlloyExpression {
 	private final String aliasModuleId;
 	private final List<AlloyExpression> parameters;
 	private final String functionId;
+	private String returnType;
 
 	public ExprFunction(String aliasModuleId, String functionId,
 			List<AlloyExpression> parameters) {
@@ -17,6 +18,10 @@ public final class ExprFunction extends AlloyExpression {
 		this.parameters = parameters;
 	}
 
+	public String getReturnType(){
+		return this.returnType;
+	}
+	
 	@Override
 	public Object accept(IExpressionVisitor v) {
 		return v.visit(this);
@@ -43,7 +48,13 @@ public final class ExprFunction extends AlloyExpression {
 
 	@Override
 	public String toString() {
-		return aliasModuleId + "/" + getFunctionId().toString() + "[" + getParameters().toString() + "]";
+		StringBuffer buffer = new StringBuffer();
+		for (AlloyExpression e : this.parameters) {
+			if (buffer.length() > 0)
+				buffer.append(",");
+			buffer.append(e.toString());
+		}
+		return (aliasModuleId==null?"null":aliasModuleId) + "/" + getFunctionId() + "[" + buffer.toString() + "]";
 	}
 
 	@Override
@@ -84,6 +95,15 @@ public final class ExprFunction extends AlloyExpression {
 		} else if (!parameters.equals(other.parameters))
 			return false;
 		return true;
+	}
+
+	public static AlloyExpression buildExprFunction(String functionId, AlloyExpression[] params, String cType) {
+		List<AlloyExpression> l = new LinkedList<AlloyExpression>();
+		for (int i = 0; i < params.length; i++)
+			l.add(params[i]);
+		ExprFunction retFun = new ExprFunction(null, functionId, l);
+		retFun.returnType = cType;
+		return retFun;
 	}
 
 }

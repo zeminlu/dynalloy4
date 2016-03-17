@@ -71,7 +71,7 @@ public final class AndFormula extends AlloyFormula {
 
 	@Override
 	public String toString() {
-		return "[" + getLeft().toString() + "And" + getRight().toString() + "]";
+		return "[" + getLeft().toString() + " And " + getRight().toString() + "]";
 	}
 
 	public AlloyFormula getLeft() {

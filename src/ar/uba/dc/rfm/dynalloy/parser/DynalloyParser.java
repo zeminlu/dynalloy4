@@ -190,7 +190,9 @@ public class DynalloyParser {
 	private void parseProgram(DocumentSection section, DynalloySpecBuffer buffer) throws RecognitionException, TokenStreamException {
 		DynAlloyANTLRParser parser = initializeParser(section);
 		ProgramDeclaration parsed = parser.dynalloyProgram();
-		buffer.putProgram(parsed.getProgramId(), parsed);
+		//mfrias: previous key in buffer field was the program name. I will now use 
+		//"programName::#args". In this way we accept program with same name, but different number of arguments.
+		buffer.putProgram(parsed.getProgramId()+"::"+parsed.getParameters().size(), parsed);
 	}
 
 	private DynAlloyANTLRParser initializeParser(DocumentSection section) {

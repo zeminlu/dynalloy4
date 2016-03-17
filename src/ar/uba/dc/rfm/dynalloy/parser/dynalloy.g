@@ -1,6 +1,7 @@
 header {
 package ar.uba.dc.rfm.dynalloy.parser;
 
+import java.util.ArrayList;
 import ar.uba.dc.rfm.alloy.VariableId;
 import ar.uba.dc.rfm.dynalloy.ast.*;	
 import ar.uba.dc.rfm.dynalloy.ast.programs.*;
@@ -164,7 +165,7 @@ dynalloyProgram returns [ProgramDeclaration r]
 		r = new ProgramDeclaration(programId.getText(),
 			 formalParams.getParameters(),
 			 localVariables == null ? Collections.<VariableId>emptyList() : localVariables.getParameters(),
-			 prog, typing);
+			 prog, typing, new ArrayList<AlloyFormula>(), new AlloyTyping());
 	}
 	;	
 	

@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 import ar.uba.dc.rfm.alloy.AlloyTyping;
+import ar.uba.dc.rfm.alloy.ast.expressions.AlloyExpression;
 import ar.uba.dc.rfm.alloy.ast.formulas.AlloyFormula;
 import ar.uba.dc.rfm.dynalloy.DynAlloyAnalyzer;
 import ar.uba.dc.rfm.dynalloy.DynAlloyCompiler;
@@ -49,7 +51,7 @@ public final class DynalloyVisualizerController {
 		try {
 			compiler.compile(dalsFile.getAbsolutePath(),
 					dalsFileToAlsPath(dalsFile), opts, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
+					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
 		} catch (RecognitionException e) {
 			throw new DynalloyVisualizerException(e);
 		} catch (TokenStreamException e) {

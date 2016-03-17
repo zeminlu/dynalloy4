@@ -1,4 +1,4 @@
-// $ANTLR 2.7.6 (2005-12-22): expression.g -> ExpressionParserTokenTypes.txt$
+// $ANTLR : expression.g -> ExpressionParserTokenTypes.txt$
 ExpressionParser    // output token vocab name
 COMMA=4
 COLON=5

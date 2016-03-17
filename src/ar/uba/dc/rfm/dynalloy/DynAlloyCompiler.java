@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +36,7 @@ import antlr.TokenStreamException;
 
 import ar.uba.dc.rfm.alloy.AlloyTyping;
 import ar.uba.dc.rfm.alloy.ast.AlloyModule;
+import ar.uba.dc.rfm.alloy.ast.expressions.AlloyExpression;
 import ar.uba.dc.rfm.alloy.ast.expressions.ExprVariable;
 import ar.uba.dc.rfm.alloy.ast.formulas.AlloyFormula;
 import ar.uba.dc.rfm.alloy.util.AlloyPrinter;
@@ -53,12 +55,14 @@ public class DynAlloyCompiler {
 	private List<AlloyStringPlugin> alloy_string_plugins = new LinkedList<AlloyStringPlugin>();
 
 	private List<DynAlloyASTPlugin>  dynalloy_ast_plugins = new LinkedList<DynAlloyASTPlugin>();
-	
-	private boolean translatingForStryker = false;
 
 	private SpecContext specContext;
 
 	public DynAlloyCompiler() {}
+	
+	public List<AlloyStringPlugin> getAlloyStringPlugins(){
+		return this.alloy_string_plugins;
+	}
 
     public void addDynAlloyASTPlugin(DynAlloyASTPlugin plugin) {
 		dynalloy_ast_plugins.add(plugin);
@@ -88,14 +92,15 @@ public class DynAlloyCompiler {
 		return buff.toString();
 	}
 
-	public void compile(String inputFilename, String outputFilename, DynAlloyOptions options,
+	public AlloyModule compile(String inputFilename, String outputFilename, DynAlloyOptions options,
 			HashMap<String, AlloyTyping> varsAndTheirTypesComingFromArithmeticConstraintsInObjectInvariantsByModule,
 			HashMap<String, List<AlloyFormula>> predsComingFromArithmeticConstraintsInObjectInvariantsByModule,
 			HashMap<String, AlloyTyping> varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram,
-			HashMap<String, List<AlloyFormula>> predsComingFromArithmeticConstraintsInContractsByProgram,
-			boolean translatingForStryker) throws RecognitionException, TokenStreamException, IOException,
+			HashMap<String, List<AlloyFormula>> predsComingFromArithmeticConstraintsInContractsByProgram) throws RecognitionException, TokenStreamException, IOException,
 			AssertionNotFound {
 
+		//REGIS: Place in which new DynAlloy may be included
+		
 		// Read DynAlloy file
 		FileReader reader = new FileReader(inputFilename);
 		String dynalloyStr = readFile(reader);
@@ -110,7 +115,7 @@ public class DynAlloyCompiler {
 		}
 
 		// Translate AST
-		DynAlloyTranslator dynalloyToAlloyXlator = new DynAlloyTranslator(translatingForStryker);
+		DynAlloyTranslator dynalloyToAlloyXlator = new DynAlloyTranslator();
 		AlloyModule alloyAST = dynalloyToAlloyXlator.translateDynAlloyAST(dynalloyAST, options, 
 				varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram, 
 				predsComingFromArithmeticConstraintsInContractsByProgram,
@@ -123,6 +128,7 @@ public class DynAlloyCompiler {
 			alloyAST = ast_plugin.transform(alloyAST);
 		}
 		
+		
 		// Print Alloy AST
 		String optionsHeader = buildOptionsHeader(options);
 		AlloyPrinter printer = new AlloyPrinter();
@@ -134,13 +140,14 @@ public class DynAlloyCompiler {
 			alloyStrWithHeader = string_plugin.transform(alloyStrWithHeader);
 		}
 		
-//		System.out.println(alloyStrWithHeader);
 		// Write Alloy file
 		writeFile(outputFilename, alloyStrWithHeader);
+		
+		return alloyAST;
 
 	}
 
-	private String buildOptionsHeader(DynAlloyOptions options) {
+	public String buildOptionsHeader(DynAlloyOptions options) {
 		StringBuffer buff = new StringBuffer();
 		buff.append("/* \n");
 		buff.append(" * DynAlloy translator options " + "\n");
@@ -155,7 +162,7 @@ public class DynAlloyCompiler {
 		return buff.toString();
 	}
 
-	private void writeFile(String outputFileName, String alloyModule) throws IOException {
+	public void writeFile(String outputFileName, String alloyModule) throws IOException {
 		FileWriter writer = new FileWriter(outputFileName);
 		writer.write(alloyModule);
 		writer.close();

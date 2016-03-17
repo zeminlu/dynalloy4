@@ -1,4 +1,4 @@
-// $ANTLR 2.7.6 (2005-12-22): "expression.g" -> "ExpressionLexer.java"$
+// $ANTLR : "expression.g" -> "ExpressionLexer.java"$
 
 package ar.uba.dc.rfm.alloy.parser;
 
@@ -541,7 +541,7 @@ tryAgain:
 		
 		match("--");
 		{
-		_loop58:
+		_loop26:
 		do {
 			if ((_tokenSet_1.member(LA(1)))) {
 				{
@@ -549,7 +549,7 @@ tryAgain:
 				}
 			}
 			else {
-				break _loop58;
+				break _loop26;
 			}
 			
 		} while (true);
@@ -569,7 +569,7 @@ tryAgain:
 		
 		match("//");
 		{
-		_loop62:
+		_loop30:
 		do {
 			if ((_tokenSet_1.member(LA(1)))) {
 				{
@@ -577,7 +577,7 @@ tryAgain:
 				}
 			}
 			else {
-				break _loop62;
+				break _loop30;
 			}
 			
 		} while (true);
@@ -597,7 +597,7 @@ tryAgain:
 		
 		match("/*");
 		{
-		_loop66:
+		_loop34:
 		do {
 			switch ( LA(1)) {
 			case '\n':
@@ -658,7 +658,7 @@ tryAgain:
 					newline();
 				}
 			else {
-				break _loop66;
+				break _loop34;
 			}
 			}
 		} while (true);
@@ -678,8 +678,8 @@ tryAgain:
 		int _saveIndex;
 		
 		{
-		int _cnt70=0;
-		_loop70:
+		int _cnt38=0;
+		_loop38:
 		do {
 			switch ( LA(1)) {
 			case ' ':
@@ -719,10 +719,10 @@ tryAgain:
 			}
 			default:
 			{
-				if ( _cnt70>=1 ) { break _loop70; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				if ( _cnt38>=1 ) { break _loop38; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 			}
 			}
-			_cnt70++;
+			_cnt38++;
 		} while (true);
 		}
 		_ttype = Token.SKIP;
@@ -774,7 +774,7 @@ tryAgain:
 		}
 		}
 		{
-		_loop74:
+		_loop42:
 		do {
 			switch ( LA(1)) {
 			case 'a':  case 'b':  case 'c':  case 'd':
@@ -813,7 +813,7 @@ tryAgain:
 			}
 			default:
 			{
-				break _loop74;
+				break _loop42;
 			}
 			}
 		} while (true);
@@ -841,14 +841,14 @@ tryAgain:
 		
 		mIDENT(false);
 		{
-		_loop78:
+		_loop46:
 		do {
 			if ((LA(1)=='/')) {
 				match('/');
 				mIDENT(false);
 			}
 			else {
-				break _loop78;
+				break _loop46;
 			}
 			
 		} while (true);
@@ -867,17 +867,17 @@ tryAgain:
 		int _saveIndex;
 		
 		{
-		int _cnt81=0;
-		_loop81:
+		int _cnt49=0;
+		_loop49:
 		do {
 			if (((LA(1) >= '0' && LA(1) <= '9'))) {
 				matchRange('0','9');
 			}
 			else {
-				if ( _cnt81>=1 ) { break _loop81; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				if ( _cnt49>=1 ) { break _loop49; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 			}
 			
-			_cnt81++;
+			_cnt49++;
 		} while (true);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {

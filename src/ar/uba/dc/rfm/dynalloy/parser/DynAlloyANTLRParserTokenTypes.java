@@ -1,7 +1,8 @@
-// $ANTLR 2.7.6 (2005-12-22): "expandeddynalloy.g" -> "DynalloyLexer.java"$
+// $ANTLR : "expandeddynalloy.g" -> "DynalloyLexer.java"$
 
 package ar.uba.dc.rfm.dynalloy.parser;
 
+import java.util.ArrayList;
 import ar.uba.dc.rfm.alloy.VariableId;
 import ar.uba.dc.rfm.dynalloy.ast.*;	
 import ar.uba.dc.rfm.dynalloy.ast.programs.*;

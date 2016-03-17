@@ -59,8 +59,8 @@ public class SpecContext {
 
 	private DynAlloyAlloyMapping mapping;
 
-	public void putCallingConvention(String moduleId, String callId, CallingConvention callingConvention) {
-		callingConventions.put(moduleId + "::" + callId, callingConvention);
+	public void putCallingConvention(String moduleId, String callId, String typesSeq, CallingConvention callingConvention) {
+		callingConventions.put(moduleId + "::" + callId + ":" + typesSeq, callingConvention);
 	}
 
 	public void switchToModule(String moduleId) {
@@ -87,8 +87,10 @@ public class SpecContext {
 
 		for (ActionDeclaration action : moduleAST.getActions())
 			allActions.put(moduleAST.getModuleId() + "::" + action.getActionId(), action);
-		for (ProgramDeclaration program : moduleAST.getPrograms())
-			allPrograms.put(moduleAST.getModuleId() + "::" + program.getProgramId(), program);
+		
+		for (ProgramDeclaration program : moduleAST.getPrograms()){
+			allPrograms.put(moduleAST.getModuleId() + "::" + program.getProgramId() + ":" + program.getParameters().size(), program);
+		}
 	}
 
 	public PredicateFormula getActionPre(String actionId) {
@@ -130,10 +132,21 @@ public class SpecContext {
 		return allActions.get(moduleId + "::" + actionId).getPost();
 	}
 
+	public ProgramDeclaration getProgram(String aliasModuleId, String programId, int i) {
+		String moduleId = resolveAlias(aliasModuleId);
+		return allPrograms.get(moduleId + "::" + programId + ":" + i);
+	}
+	
 	public ProgramDeclaration getProgram(String aliasModuleId, String programId) {
 		String moduleId = resolveAlias(aliasModuleId);
-		return allPrograms.get(moduleId + "::" + programId);
+		for (String key : allPrograms.keySet()){
+			if ((moduleId + "::" + programId).equals(key.substring(0,key.lastIndexOf(':')))){
+				return allPrograms.get(key);
+			}
+		}
+		return null;
 	}
+
 
 	public AlloyTyping getFields() {
 		if (allFields == null)
@@ -158,10 +171,11 @@ public class SpecContext {
 		if (moduleId == null)
 			throw new IllegalArgumentException(("alias " + aliasModuleId + " cannot be resolved in context " + currentModuleId + "."));
 
-		if (!callingConventions.containsKey(moduleId + "::" + actionId))
+		String numParams = "" + this.getFormalParams(actionId).size();
+		if (!callingConventions.containsKey(moduleId + "::" + actionId + ":" + numParams))
 			throw new IllegalArgumentException(("action " + moduleId + "::" + actionId + " is undefined"));
 
-		CallingConvention callingConvention = callingConventions.get(moduleId + "::" + actionId);
+		CallingConvention callingConvention = callingConventions.get(moduleId + "::" + actionId  + ":" + numParams);
 		List<AlloyExpression> parameters = callingConvention.instantiate(actualParams);
 		return new PredicateFormula(aliasModuleId, actionId, parameters);
 	}
@@ -175,11 +189,11 @@ public class SpecContext {
 	public AlloyFormulaWithLocals invokeProgram(String aliasModuleId, String programId, List<AlloyExpression> actualParams) {
 
 		String moduleId = resolveAlias(aliasModuleId);
-		if (!callingConventions.containsKey(moduleId + "::" + programId)) {
+		if (!callingConventions.containsKey(moduleId + "::" + programId + ":" + actualParams.size())) {
 			throw new IllegalArgumentException(("program " + moduleId + "::" + programId + " is undefined"));
 		}
 
-		CallingConvention callingConvention = callingConventions.get(moduleId + "::" + programId);
+		CallingConvention callingConvention = callingConventions.get(moduleId + "::" + programId + ":" + actualParams.size());
 
 		String tempPrefix = String.format("l%s_", localVarIndex++);
 		CallingConventionResult parameters = callingConvention.instantiate(actualParams, tempPrefix);
@@ -189,19 +203,19 @@ public class SpecContext {
 		return new AlloyFormulaWithLocals(formula, parameters.getLocals());
 	}
 
-	public boolean isAlreadyTranslated(String aliasModuleId, String programId) {
+	public boolean isAlreadyTranslated(String aliasModuleId, String programId, int numArgs) {
 		String moduleId = resolveAlias(aliasModuleId);
-		return programCache.containsKey(moduleId + "::" + programId);
+		return programCache.containsKey(moduleId + "::" + programId + ":" + numArgs);
 	}
 
-	public String getTranslation(String aliasModuleId, String programId) {
+	public String getTranslation(String aliasModuleId, String programId, int numArgs) {
 		String moduleId = resolveAlias(aliasModuleId);
-		return programCache.get(moduleId + "::" + programId);
+		return programCache.get(moduleId + "::" + programId + ":" + numArgs);
 	}
 
-	public void putTranslation(String programId, String program, List<AlloyExpression> exprs) {
-		programCache.put(currentModuleId + "::" + programId, program);
-		programParametersCache.put(currentModuleId + "::" + programId, expressionsToVariables(exprs));
+	public void putTranslation(String programId, String program, List<AlloyExpression> exprs, int i) {
+		programCache.put(currentModuleId + "::" + programId + ":" + i, program);
+		programParametersCache.put(currentModuleId + "::" + programId + ":" + i, expressionsToVariables(exprs));
 	}
 
 	public List<ExprVariable> getProgramParameters(String aliasModuleId, String programId) {

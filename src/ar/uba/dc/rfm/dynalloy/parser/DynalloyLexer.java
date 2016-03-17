@@ -1,7 +1,8 @@
-// $ANTLR 2.7.6 (2005-12-22): "expandeddynalloy.g" -> "DynalloyLexer.java"$
+// $ANTLR : "expandeddynalloy.g" -> "DynalloyLexer.java"$
 
 package ar.uba.dc.rfm.dynalloy.parser;
 
+import java.util.ArrayList;
 import ar.uba.dc.rfm.alloy.VariableId;
 import ar.uba.dc.rfm.dynalloy.ast.*;	
 import ar.uba.dc.rfm.dynalloy.ast.programs.*;
@@ -568,7 +569,7 @@ tryAgain:
 		
 		match("--");
 		{
-		_loop97:
+		_loop26:
 		do {
 			if ((_tokenSet_1.member(LA(1)))) {
 				{
@@ -576,7 +577,7 @@ tryAgain:
 				}
 			}
 			else {
-				break _loop97;
+				break _loop26;
 			}
 			
 		} while (true);
@@ -596,7 +597,7 @@ tryAgain:
 		
 		match("//");
 		{
-		_loop101:
+		_loop30:
 		do {
 			if ((_tokenSet_1.member(LA(1)))) {
 				{
@@ -604,7 +605,7 @@ tryAgain:
 				}
 			}
 			else {
-				break _loop101;
+				break _loop30;
 			}
 			
 		} while (true);
@@ -624,7 +625,7 @@ tryAgain:
 		
 		match("/*");
 		{
-		_loop105:
+		_loop34:
 		do {
 			switch ( LA(1)) {
 			case '\n':
@@ -685,7 +686,7 @@ tryAgain:
 					newline();
 				}
 			else {
-				break _loop105;
+				break _loop34;
 			}
 			}
 		} while (true);
@@ -705,8 +706,8 @@ tryAgain:
 		int _saveIndex;
 		
 		{
-		int _cnt109=0;
-		_loop109:
+		int _cnt38=0;
+		_loop38:
 		do {
 			switch ( LA(1)) {
 			case ' ':
@@ -746,10 +747,10 @@ tryAgain:
 			}
 			default:
 			{
-				if ( _cnt109>=1 ) { break _loop109; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				if ( _cnt38>=1 ) { break _loop38; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 			}
 			}
-			_cnt109++;
+			_cnt38++;
 		} while (true);
 		}
 		_ttype = Token.SKIP;
@@ -801,7 +802,7 @@ tryAgain:
 		}
 		}
 		{
-		_loop113:
+		_loop42:
 		do {
 			switch ( LA(1)) {
 			case 'a':  case 'b':  case 'c':  case 'd':
@@ -840,7 +841,7 @@ tryAgain:
 			}
 			default:
 			{
-				break _loop113;
+				break _loop42;
 			}
 			}
 		} while (true);
@@ -867,17 +868,17 @@ tryAgain:
 		int _saveIndex;
 		
 		{
-		int _cnt117=0;
-		_loop117:
+		int _cnt46=0;
+		_loop46:
 		do {
 			if (((LA(1) >= '0' && LA(1) <= '9'))) {
 				matchRange('0','9');
 			}
 			else {
-				if ( _cnt117>=1 ) { break _loop117; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				if ( _cnt46>=1 ) { break _loop46; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 			}
 			
-			_cnt117++;
+			_cnt46++;
 		} while (true);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {

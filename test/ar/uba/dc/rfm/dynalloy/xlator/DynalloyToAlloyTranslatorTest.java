@@ -22,6 +22,7 @@ package ar.uba.dc.rfm.dynalloy.xlator;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -166,7 +167,7 @@ public class DynalloyToAlloyTranslatorTest {
 		SpecContext specContext = new SpecContext(dynalloyAST);
 		specContext.setFields(new AlloyTyping());
 		DynalloyXlatorVisitor translator = new DynalloyXlatorVisitor(specContext, DynAlloyOptions.DEFAULT_DYNALLOY_OPTIONS, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
 		AlloyModule actual = (AlloyModule) dynalloyAST.accept(translator);
 
 		// check result
@@ -207,7 +208,7 @@ public class DynalloyToAlloyTranslatorTest {
 		SpecContext specContext = new SpecContext(dynalloyAST);
 		specContext.setFields(new AlloyTyping());
 		DynalloyXlatorVisitor translator = new DynalloyXlatorVisitor(specContext, DynAlloyOptions.DEFAULT_DYNALLOY_OPTIONS, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
+				new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>());
 		AlloyModule actual = (AlloyModule) dynalloyAST.accept(translator);
 
 

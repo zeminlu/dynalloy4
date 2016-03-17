@@ -51,7 +51,7 @@ public final class ImpliesFormula extends AlloyFormula {
 	}
 	@Override
 	public String toString() {
-		return "[" + getLeft().toString()+"Implies" +getRight().toString()+ "]";
+		return "[" + getLeft().toString()+" Implies " +getRight().toString()+ "]";
 	}
 
 	public AlloyFormula getLeft()

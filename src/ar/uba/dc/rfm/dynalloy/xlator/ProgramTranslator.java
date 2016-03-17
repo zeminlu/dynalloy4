@@ -21,6 +21,7 @@ package ar.uba.dc.rfm.dynalloy.xlator;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
@@ -188,15 +189,15 @@ class ProgramTranslator extends DfsProgramVisitor {
 
 		List<AlloyExpression> actualParams = n.getActualParameters();
 
-		if (!context.isAlreadyTranslated(aliasModuleId, programId)) {
+		if (!context.isAlreadyTranslated(aliasModuleId, programId, n.getActualParameters().size())) {
 			ProgramDeclaration programDeclaration = context.getProgram(
-					aliasModuleId, programId);
+					aliasModuleId, programId, n.getActualParameters().size());
 
 			String contextModuleId = context.getCurrentModuleId();
 			context.switchToAlias(aliasModuleId);
 			String programPredicate = (String) programDeclaration
 					.accept(new DynalloyXlatorVisitor(context, null, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
-							new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false));
+							new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>()));
 			context.switchToModule(contextModuleId);
 		}
 		AlloyFormulaWithLocals formulaWithLocals = context.invokeProgram(

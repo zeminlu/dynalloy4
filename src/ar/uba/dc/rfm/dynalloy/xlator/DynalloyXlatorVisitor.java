@@ -49,7 +49,6 @@ import ar.uba.dc.rfm.alloy.ast.formulas.AlloyFormula;
 import ar.uba.dc.rfm.alloy.ast.formulas.AndFormula;
 import ar.uba.dc.rfm.alloy.ast.formulas.FormulaVisitor;
 import ar.uba.dc.rfm.alloy.ast.formulas.ImpliesFormula;
-import ar.uba.dc.rfm.alloy.ast.formulas.NotFormula;
 import ar.uba.dc.rfm.alloy.ast.formulas.PredicateFormula;
 import ar.uba.dc.rfm.alloy.util.AlloyBuffer;
 import ar.uba.dc.rfm.alloy.util.AlloyPrinter;
@@ -67,9 +66,11 @@ import ar.uba.dc.rfm.dynalloy.ast.AssertionDeclaration;
 import ar.uba.dc.rfm.dynalloy.ast.ProgramDeclaration;
 import ar.uba.dc.rfm.dynalloy.ast.DynalloyModule;
 import ar.uba.dc.rfm.dynalloy.ast.IDynalloyVisitor;
+import ar.uba.dc.rfm.dynalloy.ast.programs.Composition;
 import ar.uba.dc.rfm.dynalloy.ast.programs.InvokeAction;
 import ar.uba.dc.rfm.dynalloy.ast.programs.InvokeProgram;
 import ar.uba.dc.rfm.dynalloy.util.DynalloyVisitor;
+import ar.uba.dc.rfm.dynalloy.visualization.DynalloyVisualizerException;
 
 public class DynalloyXlatorVisitor extends DynalloyVisitor {
 
@@ -82,8 +83,6 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 	private final SpecContext context;
 
 	private final DynAlloyOptions options;
-	
-	private boolean translatingForStryker = false;
 
 	private HashMap<String, AlloyTyping> varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram;
 
@@ -94,10 +93,11 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 	private HashMap<String, List<AlloyFormula>> predsComingFromArithmeticConstraintsInObjectInvariantsByModule = new HashMap<String, List<AlloyFormula>>();
 
 
+
+
 	public DynalloyXlatorVisitor(SpecContext _specContext, DynAlloyOptions options, 
 			HashMap<String, AlloyTyping> vars, HashMap<String, List<AlloyFormula>> preds,
-			HashMap<String, AlloyTyping> varsOI, HashMap<String, List<AlloyFormula>> predsOI,
-			boolean forStryker) {
+			HashMap<String, AlloyTyping> varsOI, HashMap<String, List<AlloyFormula>> predsOI) {
 		super(new ProgramTranslator(_specContext));
 		programTranslator = (ProgramTranslator) this.getDfsProgramVisitor();
 		context = _specContext;
@@ -106,7 +106,6 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 		this.predsComingFromArithmeticConstraintsInContractsByProgram = preds;
 		this.varsAndTheirTypesComingFromArithmeticConstraintsInObjectInvariantsByModule = varsOI;
 		this.predsComingFromArithmeticConstraintsInObjectInvariantsByModule = predsOI;
-		this.translatingForStryker = forStryker;			
 	}
 
 	public AlloyModule visit(DynalloyModule n) {
@@ -137,6 +136,26 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 			buffer.append("\n");
 			buffer.append("\n");
 			buffer.append(programPredicate + "\n");
+			AlloyVariable throwVar = new AlloyVariable("throw");
+			if (!program.getParameterTyping().contains(throwVar) || !program.getParameterTyping().get(throwVar).equals("java_lang_Throwable + null")) {
+				AlloyTyping at = new AlloyTyping();
+				String retType = null;
+				for (AlloyVariable av : program.getParameterTyping()){
+					if (!av.getVariableId().equals("return")){
+						at.put(av, at.get(av));
+					} else {
+						retType = at.get(av);
+					}
+				}
+				
+				String invokedMethodName = program.getProgramId();
+				if (invokedMethodName.endsWith("_0"))
+						invokedMethodName = invokedMethodName.substring(0, invokedMethodName.length()-2);
+				String newAddedFunction = "fun " + invokedMethodName + "[" + at.toString() + "] : " + retType + "{" + program.getParameters().get(0) + "}";
+				buffer.append("\n");
+				buffer.append("\n");
+				buffer.append(newAddedFunction + "\n");
+			}
 		}
 
 		String compilableA4Spec;
@@ -275,11 +294,22 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 
 		for (Iterator<String> programNamesWithAttachedTypings = this.varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram.keySet().iterator();
 				programNamesWithAttachedTypings.hasNext();){
-			String progName = programNamesWithAttachedTypings.next();		
-			if (((InvokeProgram)n.getProgram()).getProgramId().contains(progName)){
-				typingForCurrentProgram = varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram.get(progName);
-				predsForCurrentProgram = predsComingFromArithmeticConstraintsInContractsByProgram.get(progName);
-				break;
+			String progName = programNamesWithAttachedTypings.next();	
+			if (n.getProgram() instanceof InvokeProgram){
+				if (((InvokeProgram)n.getProgram()).getProgramId().contains(progName)){
+					typingForCurrentProgram = varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram.get(progName);
+					predsForCurrentProgram = predsComingFromArithmeticConstraintsInContractsByProgram.get(progName);
+					break;
+				}
+			}
+			if (n.getProgram() instanceof Composition && ((Composition)n.getProgram()).get(0) instanceof InvokeProgram){
+				if (((InvokeProgram)((Composition)n.getProgram()).get(0)).getProgramId().contains(progName)){
+					typingForCurrentProgram = varsAndTheirTypesComingFromArithmeticConstraintsInContractsByProgram.get(progName);
+					predsForCurrentProgram = predsComingFromArithmeticConstraintsInContractsByProgram.get(progName);
+					break;
+				}
+			} else {
+				//throw new DynalloyVisualizerException();
 			}
 		}
 
@@ -322,17 +352,13 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 			}
 		}
 
-		
-		AlloyFormula post = addIdxsToPost(n.getPost(), varCollector.collect(aux_af));
-		if (translatingForStryker)
-			post = new NotFormula(post);
+		AlloyFormula post = addIdxsToPost(n.getPost(), varCollector.collect(aux_af));		
 
 		AlloyFormula formula = new ImpliesFormula(aux_af, post);		
 
 		// variable "thiz" may not occur explicitly in the program if it is static, nor in the contract. Yet it
 		// may occur in the predicates that come from the invariant. I will look up whether "thiz" occurs in these
 		// predicates, and in case it does, will add it to the typing.
-
 
 		AlloyTyping assertionTyping = n.getTyping();
 		AlloyTyping programLocalsTyping = program.getLocals();
@@ -348,8 +374,6 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 
 		}
 
-
-
 		// Since formulas may contain arithmetic type variables that are to be constrained from outside the formula
 		// being built, we will use a temporary typing that includes these variables just to avoid an exception for 
 		// undefined variable.
@@ -357,16 +381,11 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 		AlloyTyping invsTyping = this.varsAndTheirTypesComingFromArithmeticConstraintsInObjectInvariantsByModule.get(this.options.getModuleUnderAnalysis());
 		tempTyping = tempTyping.merge(invsTyping);
 
-
-
-
 		AlloyTyping typing_2 = buildQuantification(formula, tempTyping);
 		AlloyAssertion assertion = new AlloyAssertion(n.getAssertionId(), typing_2, formula);
 		if (context.getMapping() != null) {
 			context.getMapping().addAssertion(n, assertion);
 		}
-
-
 
 		return assertion;
 
@@ -379,9 +398,9 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 		FormulaMutator fm = new FormulaMutator(qfpt);
 		return (AlloyFormula)f.accept(fm);
 	}
-	
-	
-	
+
+
+
 
 	private AlloyFormula addIdxsToPredsFromInvInPost(PredicateFormula post, IdxRangeMap rs) {
 		AlloyFormula f = (AlloyFormula) post.accept(new FormulaMutator(new FirstSubindexer()));
@@ -461,9 +480,11 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 
 		typing = typing.merge(buildQuantification(alloyFormula, n.getTyping()));
 
+		String typesSeq = getTypesSeq(n.getFormalParameters());
+
 		CallingConvention callingConvention = new CallingConvention(formalPs, Collections.<VariableId> emptyList(), new IdxRangeCollectHelper()
-		.collect(alloyFormula), n.getTyping());
-		context.putCallingConvention(context.getCurrentModuleId(), n.getActionId(), callingConvention);
+				.collect(alloyFormula), n.getTyping());
+		context.putCallingConvention(context.getCurrentModuleId(), n.getActionId(), typesSeq, callingConvention);
 
 		List<AlloyExpression> exprs = callingConvention.instantiate(actualPs);
 
@@ -520,7 +541,7 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 	public Object visit(ProgramDeclaration p) {
 		programTranslator.setNewProgramId(p.getProgramId());
 
-		if (!context.isAlreadyTranslated(null, p.getProgramId())) {
+		if (!context.isAlreadyTranslated(null, p.getProgramId(), p.getParameters().size())) {
 
 			Vector<Object> v = (Vector<Object>) super.visit(p);
 			AlloyFormulaWithLocals programFormula = (AlloyFormulaWithLocals) v.get(0);
@@ -563,7 +584,8 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 
 			CallingConvention callingConvention = new CallingConvention(p.getParameters(), allLocals, ranges, merged);
 
-			context.putCallingConvention(context.getCurrentModuleId(), p.getProgramId(), callingConvention);
+			String typesSeq = getTypesSeq(p.getParameters());
+			context.putCallingConvention(context.getCurrentModuleId(), p.getProgramId(), typesSeq, callingConvention);
 
 			List<AlloyExpression> exprs = callingConvention.instantiate(actualPs);
 
@@ -579,8 +601,6 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 
 			for (int i = 0; i < exprs.size(); i++) {
 				AlloyExpression ex = exprs.get(i);
-				if (ex.toString().contains("java_lang_IntArray_contents"))
-					System.out.println(ex.toString());
 				if (i != 0) {
 					buff.append(",");
 					if (prettyPrinting)
@@ -630,10 +650,21 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 				context.getMapping().addRun(p.getProgramId(), programFormula.getFormula());
 			}
 
-			context.putTranslation(p.getProgramId(), buff.toString(), exprs);
+			context.putTranslation(p.getProgramId(), buff.toString(), exprs, p.getParameters().size());
 		}
-		String predicateString = context.getTranslation(null, p.getProgramId());
+		String predicateString = context.getTranslation(null, p.getProgramId(), p.getParameters().size());
 		return predicateString;
+	}
+
+	private String getTypesSeq(List<VariableId> alloyTyping) {
+		//Eventually we will need something more sophisticated. For the
+		//time being, we will only add the number of parameters.
+		//		String result = "";
+		//		for (AlloyVariable av : alloyTyping.getVarsInTyping()){
+		//			result = result + ":" + alloyTyping.get(av);
+		//		}
+		//		return result;
+		return "" + alloyTyping.size();
 	}
 
 	private static String increaseIdentation(String string) {

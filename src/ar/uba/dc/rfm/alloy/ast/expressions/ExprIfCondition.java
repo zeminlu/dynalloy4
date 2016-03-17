@@ -72,5 +72,11 @@ public class ExprIfCondition extends AlloyExpression {
 	public Object accept(IExpressionVisitor v) {
 		return v.visit(this);
 	}
+	
+	
+	@Override
+	public String toString(){
+		return "IF (" + this.condition.toString() + ") THEN (" + this.left.toString() + ") ELSE (" + this.right.toString() + ")";
+	}
 
 }

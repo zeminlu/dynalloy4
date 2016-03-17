@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 import ar.uba.dc.rfm.alloy.AlloyTyping;
+import ar.uba.dc.rfm.alloy.ast.expressions.AlloyExpression;
 import ar.uba.dc.rfm.alloy.ast.formulas.AlloyFormula;
 import ar.uba.dc.rfm.dynalloy.DynAlloyOptions;
 import ar.uba.dc.rfm.dynalloy.DynAlloyTranslator;
@@ -37,7 +39,7 @@ public class MainCommon {
 	
 	public static SpecContext translateModule(String dynalloyFilePath) throws RecognitionException, TokenStreamException, IOException, AssertionNotFound {
 		DynalloyModule module = getModules(dynalloyFilePath);
-		DynAlloyTranslator translator = new DynAlloyTranslator(false);
+		DynAlloyTranslator translator = new DynAlloyTranslator();
 		
 		DynAlloyOptions options = new DynAlloyOptions();
 		options.setAssertionToCheck(getAssertionToCheck(dynalloyFilePath));
