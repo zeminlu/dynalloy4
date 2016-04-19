@@ -2,6 +2,8 @@
 
 package ar.uba.dc.rfm.dynalloy.parser;
 
+import java.util.ArrayList;
+
 import ar.uba.dc.rfm.alloy.VariableId;
 import ar.uba.dc.rfm.dynalloy.ast.*;	
 import ar.uba.dc.rfm.dynalloy.ast.programs.*;

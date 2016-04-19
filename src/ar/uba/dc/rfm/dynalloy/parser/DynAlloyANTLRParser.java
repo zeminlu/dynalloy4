@@ -2,6 +2,8 @@
 
 package ar.uba.dc.rfm.dynalloy.parser;
 
+import java.util.ArrayList;
+
 import ar.uba.dc.rfm.alloy.VariableId;
 import ar.uba.dc.rfm.dynalloy.ast.*;	
 import ar.uba.dc.rfm.dynalloy.ast.programs.*;
@@ -17,7 +19,6 @@ import ar.uba.dc.rfm.dynalloy.TestPredicateLabel;
 import java.io.StringReader;
 import java.util.Collections;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.HashSet;
@@ -647,7 +648,6 @@ public DynAlloyANTLRParser(ParserSharedInputState state) {
 		returnAST = dynalloyAction_AST;
 		return r;
 	}
-	
 	
 	public final PredicateFormula  predicateFormula(
 		IAlloyExpressionParseContext ctx

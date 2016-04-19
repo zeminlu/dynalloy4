@@ -579,8 +579,6 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 
 			for (int i = 0; i < exprs.size(); i++) {
 				AlloyExpression ex = exprs.get(i);
-				if (ex.toString().contains("java_lang_IntArray_contents"))
-					System.out.println(ex.toString());
 				if (i != 0) {
 					buff.append(",");
 					if (prettyPrinting)
