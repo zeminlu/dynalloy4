@@ -1,4 +1,4 @@
-// $ANTLR 2.7.6 (2005-12-22): "expression.g" -> "ExpressionParser.java"$
+// $ANTLR : "expression.g" -> "ExpressionParser.java"$
 
 package ar.uba.dc.rfm.alloy.parser;
 

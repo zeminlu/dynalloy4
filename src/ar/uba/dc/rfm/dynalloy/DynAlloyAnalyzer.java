@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import antlr.RecognitionException;
@@ -17,11 +18,15 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Module;
 import edu.mit.csail.sdg.alloy4compiler.parser.CompUtil;
 
 import ar.uba.dc.rfm.alloy.AlloyTyping;
+import ar.uba.dc.rfm.alloy.ast.AlloyModule;
+import ar.uba.dc.rfm.alloy.ast.expressions.AlloyExpression;
 import ar.uba.dc.rfm.alloy.ast.formulas.AlloyFormula;
+import ar.uba.dc.rfm.alloy.util.AlloyPrinter;
 import ar.uba.dc.rfm.dynalloy.analyzer.AlloyAnalysisException;
 import ar.uba.dc.rfm.dynalloy.analyzer.AlloyAnalysisResult;
 import ar.uba.dc.rfm.dynalloy.analyzer.AlloyAnalyzer;
 import ar.uba.dc.rfm.dynalloy.parser.AssertionNotFound;
+import ar.uba.dc.rfm.dynalloy.plugin.AlloyStringPlugin;
 import ar.uba.dc.rfm.dynalloy.trace.DynAlloySolution;
 import ar.uba.dc.rfm.dynalloy.trace.DynAlloySolutionBuilder;
 import ar.uba.dc.rfm.dynalloy.visualization.AlloyCommand;
@@ -55,10 +60,26 @@ public final class DynAlloyAnalyzer {
 			throws VizException {
 		DynAlloyCompiler controller = new DynAlloyCompiler();
 		try {
-			controller.compile(dalsFile.getAbsolutePath(),
+			AlloyModule alloyAST = controller.compile(dalsFile.getAbsolutePath(),
 					dalsFileToAlsPath(dalsFile),
 					DynAlloyOptions.DEFAULT_DYNALLOY_OPTIONS, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
 					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
+
+			// Print Alloy AST
+			String optionsHeader = controller.buildOptionsHeader(options);
+			AlloyPrinter printer = new AlloyPrinter();
+			String alloyStr = (String) alloyAST.accept(printer);
+			String alloyStrWithHeader = optionsHeader + "\n" + alloyStr;
+
+			// Apply AlloyString plugins
+			for (AlloyStringPlugin string_plugin: controller.getAlloyStringPlugins()) {
+				alloyStrWithHeader = string_plugin.transform(alloyStrWithHeader);
+			}
+
+			// System.out.println(alloyStrWithHeader);
+			// Write Alloy file
+			controller.writeFile(dalsFileToAlsPath(dalsFile), alloyStrWithHeader);
+
 		} catch (RecognitionException e) {
 			throw new DynalloyVisualizerException(e);
 		} catch (TokenStreamException e) {
@@ -96,10 +117,25 @@ public final class DynAlloyAnalyzer {
 				output_filename = dalsFileToAlsPath(dalsFile);
 			else
 				output_filename = options.getOutputFilename();
-			
-			compiler.compile(dalsFile.getAbsolutePath(),
+
+			AlloyModule alloyModule = compiler.compile(dalsFile.getAbsolutePath(),
 					output_filename, options, new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(),
 					new HashMap<String, AlloyTyping>(), new HashMap<String, List<AlloyFormula>>(), false);
+
+			// Print Alloy AST
+			String optionsHeader = compiler.buildOptionsHeader(options);
+			AlloyPrinter printer = new AlloyPrinter();
+			String alloyStr = (String) alloyModule.accept(printer);
+			String alloyStrWithHeader = optionsHeader + "\n" + alloyStr;
+
+			// Apply AlloyString plugins
+			for (AlloyStringPlugin string_plugin: compiler.getAlloyStringPlugins()) {
+				alloyStrWithHeader = string_plugin.transform(alloyStrWithHeader);
+			}
+
+			//			System.out.println(alloyStrWithHeader);
+			// Write Alloy file
+			compiler.writeFile(output_filename, alloyStrWithHeader);
 
 		} catch (RecognitionException e) {
 			throw new DynalloyVisualizerException(e);

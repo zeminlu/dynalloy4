@@ -44,7 +44,9 @@ public class FormalParametersDeclaration {
 	}
 	
 	public void put(AlloyVariable v, String t){
-		typing.put(v, t);
+		typing.put(v, t.trim());
 		parameters.add(v.getVariableId());
 	}
+
+
 }

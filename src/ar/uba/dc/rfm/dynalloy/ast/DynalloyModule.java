@@ -21,8 +21,10 @@ package ar.uba.dc.rfm.dynalloy.ast;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import ar.uba.dc.rfm.alloy.AlloyTyping;
+import ar.uba.dc.rfm.alloy.ast.AlloyModule;
 import ar.uba.dc.rfm.alloy.ast.formulas.AlloyFormula;
 import ar.uba.dc.rfm.dynalloy.util.DynalloyPrinter;
 

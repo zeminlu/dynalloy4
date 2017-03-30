@@ -119,7 +119,7 @@ public final class AlloyJNILibraryPath {
 			// The error will be caught later by the "berkmin" or "spear" test
 		}
 		// Copy the platform-dependent binaries
-		Util.copy(true, false, platformBinary, arch + "/libminisat.so", arch + "/libminisatx1.so", arch + "/libminisat220.jnilib", arch + "/libminisat220simp.jnilib", arch + "/libminisat220.so", arch + "/libminisat220simp.so", arch + "/libminisat.jnilib", arch + "/libminisatprover.so",
+		Util.copy(true, false, platformBinary, arch + "/libminisat.so", arch + "/libminisatx1.so", arch + "/libminisat220.jnilib", arch + "/libminisat220.so", arch + "/libminisat.jnilib", arch + "/libminisatprover.so",
 				arch + "/libminisatproverx1.so", arch + "/libminisatprover.jnilib", arch + "/libzchaff.so", arch + "/libzchaffx1.so", arch
 						+ "/libzchaff.jnilib", arch + "/berkmin", arch + "/spear");
 		Util.copy(false, false, platformBinary, arch + "/minisat.dll", arch + "/minisatprover.dll", arch + "/zchaff.dll", arch + "/berkmin.exe", arch

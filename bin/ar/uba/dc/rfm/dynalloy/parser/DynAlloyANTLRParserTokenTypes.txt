@@ -1,4 +1,4 @@
-// $ANTLR 2.7.6 (2005-12-22): expandeddynalloy.g -> DynAlloyANTLRParserTokenTypes.txt$
+// $ANTLR : expandeddynalloy.g -> DynAlloyANTLRParserTokenTypes.txt$
 DynAlloyANTLRParser    // output token vocab name
 COMMA=4
 COLON=5

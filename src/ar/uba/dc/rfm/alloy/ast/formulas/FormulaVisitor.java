@@ -62,6 +62,9 @@ public class FormulaVisitor implements IFormulaVisitor {
 
 	public Object visit(ImpliesFormula f) {
 		Object l = f.getLeft().accept(this);
+		if (f.getRight() == null){
+			int i = 0;
+		}
 		Object r = f.getRight().accept(this);
 		Vector<Object> result = new Vector<Object>();
 		result.add(l);

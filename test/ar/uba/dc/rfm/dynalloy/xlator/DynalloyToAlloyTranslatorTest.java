@@ -22,6 +22,7 @@ package ar.uba.dc.rfm.dynalloy.xlator;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 

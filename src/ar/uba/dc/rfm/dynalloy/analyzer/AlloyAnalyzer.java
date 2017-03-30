@@ -20,6 +20,9 @@
 
 package ar.uba.dc.rfm.dynalloy.analyzer;
 
+import java.util.HashSet;
+
+import ar.uba.dc.rfm.alloy.ast.expressions.AlloyExpression;
 import ar.uba.dc.rfm.dynalloy.visualization.AlloyCommand;
 import ar.uba.dc.rfm.dynalloy.visualization.PrintStreamA4Reporter;
 import ar.uba.dc.rfm.dynalloy.visualization.VizException;
@@ -43,6 +46,8 @@ public class AlloyAnalyzer {
 	public static A4Solution answer = null;
 
 	private String alloyFilename;
+	
+	
 
 	public AlloyAnalyzer(String alloyFilename, A4Reporter a4Reporter) {
 		verbosity = false;

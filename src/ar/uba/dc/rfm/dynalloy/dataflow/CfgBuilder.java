@@ -156,7 +156,7 @@ public class CfgBuilder extends DfsProgramVisitor {
 			newMapping = getNextLevelParamToGlobalVarMapping(formalParams, actualParams);
 		}
 		
-		ProgramDeclaration calledProgram = specContext.getProgram(n.getAliasModuleId(), n.getProgramId());
+		ProgramDeclaration calledProgram = specContext.getProgram(n.getAliasModuleId(), n.getProgramId(), n.getActualParameters().size());
 		Object cfgBuilderNode = calledProgram.getBody().accept(new CfgBuilder(specContext, calledProgram, newMapping));
 		
 		return cfgBuilderNode;

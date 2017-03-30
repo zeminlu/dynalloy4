@@ -178,6 +178,12 @@ public class DynalloyParser {
 	private void parseAssertion(DocumentSection section, DynalloySpecBuffer buffer) throws RecognitionException, TokenStreamException {
 		DynAlloyANTLRParser parser = initializeParser(section);
 		AssertionDeclaration parsed = parser.dynalloyAssertion();
+		// Will make all the variables coming from arithmetic operations immutable
+		for (AlloyVariable av : parsed.getTyping().getVarsInTyping()){
+			if (av.getVariableId().getString().contains("SK_jml_pred_java_primitive")){
+				av.setMutable(false);
+			}
+		}
 		buffer.addAssertion(parsed);
 	}
 
@@ -190,7 +196,9 @@ public class DynalloyParser {
 	private void parseProgram(DocumentSection section, DynalloySpecBuffer buffer) throws RecognitionException, TokenStreamException {
 		DynAlloyANTLRParser parser = initializeParser(section);
 		ProgramDeclaration parsed = parser.dynalloyProgram();
-		buffer.putProgram(parsed.getProgramId(), parsed);
+		//mfrias: previous key in buffer field was the program name. I will now use 
+		//"programName::#args". In this way we accept program with same name, but different number of arguments.
+		buffer.putProgram(parsed.getProgramId()+"::"+parsed.getParameters().size(), parsed);
 	}
 
 	private DynAlloyANTLRParser initializeParser(DocumentSection section) {

@@ -14,6 +14,7 @@ import ar.uba.dc.rfm.alloy.ast.AlloyAssertion;
 import ar.uba.dc.rfm.alloy.ast.AlloyFact;
 import ar.uba.dc.rfm.alloy.ast.AlloyModule;
 import ar.uba.dc.rfm.alloy.ast.AlloySig;
+import ar.uba.dc.rfm.alloy.ast.expressions.AlloyExpression;
 import ar.uba.dc.rfm.alloy.ast.expressions.ExprVariable;
 import ar.uba.dc.rfm.alloy.ast.formulas.AlloyFormula;
 import ar.uba.dc.rfm.alloy.util.AlloyPrinter;
@@ -40,12 +41,12 @@ public class DynAlloyTranslator {
 	public DynAlloyTranslator(boolean forStryker){
 		this.translatingForStryker = forStryker;
 	}
+
 	
 	public SpecContext getSpecContext() {
 		return specContext;
 	}
 
-	
 	public void setSpecContext(SpecContext specContext) {
 		this.specContext = specContext;
 	}
