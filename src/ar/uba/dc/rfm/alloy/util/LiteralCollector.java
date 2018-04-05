@@ -7,6 +7,7 @@ import ar.uba.dc.rfm.alloy.ast.expressions.AlloyExpression;
 import ar.uba.dc.rfm.alloy.ast.formulas.EqualsFormula;
 import ar.uba.dc.rfm.alloy.ast.formulas.FormulaVisitor;
 import ar.uba.dc.rfm.alloy.ast.formulas.PredicateFormula;
+import ar.uba.dc.rfm.alloy.ast.formulas.QuantifiedFormula;
 
 public class LiteralCollector extends FormulaVisitor {
 	
@@ -53,6 +54,13 @@ public class LiteralCollector extends FormulaVisitor {
 			this.charsCollected.addAll(this.getLiteralCollectorExpVisitor().getCharLiterals());
 			this.floatsCollected.addAll(this.getLiteralCollectorExpVisitor().getFloatLiterals());
 		}
+		return null;
+	}
+
+	
+	@Override
+	public Object visit(QuantifiedFormula n) {
+		n.getFormula().accept(this);
 		return null;
 	}
 
