@@ -172,7 +172,12 @@ public class DynalloyXlatorVisitor extends DynalloyVisitor {
 		this.context.switchToModule(n.getModuleId());
 
 		assert n.getAssertions().size() == 1;
-		AssertionDeclaration assertion = n.getAssertions().iterator().next();
+		AssertionDeclaration assertion = null;
+		try {
+			assertion = n.getAssertions().iterator().next();
+		} catch (Exception e ){
+			System.out.println("The method under analysis may be missing a contract.");
+		}
 
 		AlloyAssertion alloyAssertion = (AlloyAssertion) assertion.accept(this);
 
